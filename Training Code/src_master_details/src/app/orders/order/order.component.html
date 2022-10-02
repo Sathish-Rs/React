@@ -1,0 +1,72 @@
+<form #form="ngForm" autocomplete="off" *ngIf="service.OrderData" (submit)="onSubmit(form)">
+  <input type="hidden"  name="orderId" #orderId="ngModel" [(ngModel)]="service.OrderData.orderId">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Order No.</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">#</div>
+          </div>
+          <input name="orderNumber" #orderNumber="ngModel" [(ngModel)]="service.OrderData.orderNumber" class="form-control" readonly>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Customer</label>
+        <select name="customerId" #customerId="ngModel" [(ngModel)]="service.OrderData.customerId" class="form-control"
+        >
+          <option value="0">-Select-</option>
+          <option *ngFor="let item of service.coutomerList" value="{{item.customerId}}" [selected]="item.customerId == service.OrderData.customerId">{{item.customerName}}</option>
+
+        </select>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Grand Total</label>
+
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">$</div>
+          </div>
+          <input name="total" #total="ngModel" [(ngModel)]="service.OrderData.total" class="form-control" readonly>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <table class="table table-borderless">
+    <thead class="thead-light">
+      <th>Food</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>Total</th>
+      <th>
+        <a class="btn btn-sm btn-success text-white" (click)="AddOrEditOrderItem(null,service.OrderData.orderId)"><i class="fa fa-plus"></i> Add Item</a>
+      </th>
+    </thead>
+    <tbody>
+      <tr *ngIf="service.OrderDetailsList.length==0" >
+        <td class="font-italic text-center" colspan="5">
+          No food item selected for this order.
+        </td>
+      </tr>
+
+      <tr *ngFor="let item of service.OrderDetailsList;let i=index;">
+        <td>{{item.itemName}}</td>
+        <td>{{item.price}}</td>
+        <td>{{item.qty}}</td>
+        <td>{{item.total}}</td>
+        <td>
+          <a class="btn btn-sm btn-info text-white" (click)="AddOrEditOrderItem(i,service.OrderData.orderId)"><i class="fa fa-pencil"></i></a>
+          <a class="btn btn-sm btn-danger text-white ml-1" (click)="onDeleteOrderItem(item.orderItemId,i)"><i class="fa fa-trash"></i></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="form-group">
+    <button type="submit" class="btn btn-dark"><i class="fa fa-database"></i> Submit</button>
+    <a class="btn btn-outline-dark ml-1" routerLink="/orders"><i class="fa fa-table"></i> View Orders</a>
+  </div>
+</form>
